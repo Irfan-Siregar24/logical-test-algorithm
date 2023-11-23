@@ -1,43 +1,33 @@
 <?php
 
-function sequenceExists($main, $seq) {
-    $mainLength = count($main);
-    $seqLength = count($seq);
+function sequenceExists($mainArray, $sequenceArray) {
+    $mainLength = count($mainArray);
+    $seqLength = count($sequenceArray);
 
-    // Jika panjang urutan lebih besar dari panjang array utama, langsung kembalikan false
+    // Jika panjang urutan lebih besar daripada panjang utama, tidak mungkin ditemukan.
     if ($seqLength > $mainLength) {
         return false;
     }
 
-    for ($i = 0; $i <= $mainLength - $seqLength; $i++) {
-        $found = true;
+    // Mencari posisi pertama dari elemen pertama urutan di dalam utama.
+    $startPos = array_search($sequenceArray[0], $mainArray);
 
-        for ($j = 0; $j < $seqLength; $j++) {
-            // Periksa setiap elemen urutan
-            if ($main[$i + $j] != $seq[$j]) {
-                $found = false;
-                break;
-            }
-        }
-
-        // Jika ditemukan, kembalikan true
-        if ($found) {
-            return true;
-        }
+    if ($startPos === false || $startPos + $seqLength > $mainLength) {
+        return false;
     }
 
-    // Jika tidak ditemukan, kembalikan false
-    return false;
+    // Memeriksa apakah sisa utama setelah posisi pertama sesuai dengan urutan.
+    $subArray = array_slice($mainArray, $startPos, $seqLength);
+    return $subArray == $sequenceArray;
 }
 
-$main = array(20, 7, 8, 10, 2, 5, 6);
-$seq1 = array(7, 8);
-$seq2 = array(8, 7);
-$seq3 = array(7, 10);
+$main = [20, 7, 8, 10, 2, 5, 6];
+$sequence1 = [7, 8];
+$sequence2 = [8, 7];
+$sequence3 = [7, 10];
 
-// Contoh penggunaan
-var_dump(sequenceExists($main, $seq1)); // true
-var_dump(sequenceExists($main, $seq2)); // false
-var_dump(sequenceExists($main, $seq3)); // false
+echo "sequenceExists(\$main, [7, 8]) => " . (sequenceExists($main, $sequence1) ? 'true' : 'false') . "\n";
+echo "sequenceExists(\$main, [8, 7]) => " . (sequenceExists($main, $sequence2) ? 'true' : 'false') . "\n";
+echo "sequenceExists(\$main, [7, 10]) => " . (sequenceExists($main, $sequence3) ? 'true' : 'false') . "\n";
 
 ?>
